@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-crypto-aes",
+  "name": "nodejs-crypto-aes-hmac-pbkdf2",
   "version": "1.0.0",
   "type": "module",
   "description": "",
