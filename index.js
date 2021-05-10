@@ -2,7 +2,14 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import formidable from 'formidable';
 import path from 'path';
-import { decryptFile, decryptText, encryptFile, encryptText } from './cryptoService.js';
+import {
+  decryptFile,
+  decryptText,
+  encryptFile,
+  encryptText,
+  passwordHashGenerateHmac,
+  passwordHashGeneratePBKDF2,
+} from './cryptoService.js';
 
 const port = 8000;
 const app = express();
@@ -44,6 +51,18 @@ app.post('/file-decrypt', (req, res, next) => {
     decryptFile(file1.path, decryptedFilePath);
     res.json({ decryptedFilePath });
   });
+});
+
+app.post('/password-hash-hmac', (req, res) => {
+  const { password } = req.body;
+  const hashedPassword = passwordHashGenerateHmac(password);
+  res.json({ password, hashedPassword });
+});
+
+app.post('/password-hash-pbkdf2', (req, res) => {
+  const { password } = req.body;
+  const hashedPassword = passwordHashGeneratePBKDF2(password);
+  res.json({ password, hashedPassword });
 });
 
 app.listen(port, () => {
