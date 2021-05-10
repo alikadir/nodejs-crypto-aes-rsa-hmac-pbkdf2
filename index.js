@@ -1,33 +1,51 @@
-import CryptoJS from 'crypto-js';
-import fs from 'fs';
-const aesKey = 'aliveli';
+import express from 'express';
+import bodyParser from 'body-parser';
+import formidable from 'formidable';
+import path from 'path';
+import { decryptFile, decryptText, encryptFile, encryptText } from './cryptoService.js';
 
-const samplePlainText = 'Hello World!';
+const port = 8000;
+const app = express();
+app.use(bodyParser.json());
 
-const encryptedText = CryptoJS.AES.encrypt(samplePlainText, aesKey).toString();
-console.log({ encryptedText });
+app.post('/text-encrypt', (req, res) => {
+  const { text } = req.body;
+  const encryptedText = encryptText(text);
+  res.json({ encryptedText });
+});
 
-const decryptedText = CryptoJS.AES.decrypt(encryptedText, aesKey).toString(CryptoJS.enc.Utf8);
-console.log({ decryptedText });
+app.post('/text-decrypt', (req, res) => {
+  const { text } = req.body;
+  const decryptedText = decryptText(text);
+  res.json({ decryptedText });
+});
 
-console.log('----------------------------------------------');
+app.post('/file-encrypt', (req, res, next) => {
+  const form = formidable();
 
-const readSampleFile = fs.readFileSync('sample-plain-image.png').toString('base64');
+  form.parse(req, (err, fields, files) => {
+    if (err) next(err);
 
-const encryptedFile = CryptoJS.AES.encrypt(readSampleFile, aesKey).toString();
-console.log({ encryptedFile });
-const encryptedFileBuffer = Buffer.from(encryptedFile, 'base64');
-fs.writeFileSync('encrypted-image.png', encryptedFileBuffer);
-console.log('created: encrypted-image.png');
+    const { file1 } = files;
+    const encryptedFilePath = path.join(process.cwd(), 'encrypted-files', file1.name);
+    encryptFile(file1.path, encryptedFilePath);
+    res.json({ encryptedFilePath });
+  });
+});
 
-console.log('-----------');
+app.post('/file-decrypt', (req, res, next) => {
+  const form = formidable();
 
-const readEncryptedFile = fs.readFileSync('encrypted-image.png').toString('base64');
+  form.parse(req, (err, fields, files) => {
+    if (err) next(err);
 
-const decryptedFile = CryptoJS.AES.encrypt(readEncryptedFile, aesKey).toString();
-console.log({ decryptedFile });
-const decryptedFileBuffer = Buffer.from(decryptedFile, 'base64');
-fs.writeFileSync('decrypted-image.png', decryptedFileBuffer);
-console.log('created: decrypted-image.png');
+    const { file1 } = files;
+    const decryptedFilePath = path.join(process.cwd(), 'decrypted-files', file1.name);
+    decryptFile(file1.path, decryptedFilePath);
+    res.json({ decryptedFilePath });
+  });
+});
 
-console.log('DONE');
+app.listen(port, () => {
+  console.log(`server start http://localhost:${port}`);
+});
