@@ -7,6 +7,8 @@ import {
   decryptText,
   encryptFile,
   encryptText,
+  jwtTokenDecode,
+  jwtTokenGenerate,
   passwordHashGenerateHmac,
   passwordHashGeneratePBKDF2,
 } from './cryptoService.js';
@@ -63,6 +65,18 @@ app.post('/password-hash-pbkdf2', (req, res) => {
   const { password } = req.body;
   const hashedPassword = passwordHashGeneratePBKDF2(password);
   res.json({ password, hashedPassword });
+});
+
+app.post('/jwt-generate', (req, res) => {
+  const { data } = req.body;
+  const jwtToken = jwtTokenGenerate(data);
+  res.json({ jwtToken });
+});
+
+app.post('/jwt-decode', (req, res) => {
+  const { token } = req.body;
+  const data = jwtTokenDecode(token);
+  res.json({ data });
 });
 
 app.listen(port, () => {
