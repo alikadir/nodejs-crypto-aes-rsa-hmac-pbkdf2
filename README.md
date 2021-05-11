@@ -17,8 +17,8 @@ HMACSHA256(
 ```
 `npm install base64url` or native base64 and url encoder
 ```javascript
-encodeURIComponent(Buffer.from('{name:"ali"}').toString('base64').replaceAll('=',''))
-encodeURIComponent(btoa('{name:"ali"}').replaceAll('=',''))
+encodeURIComponent(Buffer.from('{name:"ali"}').toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_'))
+encodeURIComponent(btoa('{name:"ali"}').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_'))
 ```
 
 Postman Collection for text and file crypto request
