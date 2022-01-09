@@ -1,11 +1,21 @@
-## using Nodejs, cryptography with AES, HMAC, PBKDF2
+## using Nodejs, cryptography with AES, RSA, HMAC, PBKDF2
 
 
-**AES256** algorithm for text and file encrypt
+**AES256** is a fast cryptography algorithm for text and file encryption.
 
-**HMAC** - SHA256(Password + Salt)
+**RSA** is a more secure cryptography algorithm for text and file encryption.
 
-**PBKDF2** - N...SHA256(Password + SHA256(Password + Salt))
+---
+
+**HMAC** - SHA256(Password + Salt) 
+
+_HMAC is more complex and secure than SHA256_
+
+**PBKDF2** - N...SHA256(Password + SHA256(Password + Salt)) 
+
+_PBDKF2 is more complex and secure than HMAC_
+
+---
 
 ### JWT
 ```javascript
@@ -21,7 +31,9 @@ encodeURIComponent(Buffer.from('{name:"ali"}').toString('base64').replace(/=/g, 
 encodeURIComponent(btoa('{name:"ali"}').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_'))
 ```
 
-Postman Collection for text and file crypto request
+---
+
+**Postman** Collection for text and file crypto request
 
 https://www.getpostman.com/collections/f12246b2ac128c4660af
 
